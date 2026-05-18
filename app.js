@@ -44,8 +44,21 @@ btn.classList.add('active');
 };
 
 const toggleModal = () => {
-document.getElementById('product-modal')
-.classList.toggle('hidden');
+
+const modal = document.getElementById('product-modal');
+
+if(modal.classList.contains('hidden')){
+
+modal.classList.remove('hidden');
+modal.style.display = 'flex';
+
+}else{
+
+modal.classList.add('hidden');
+modal.style.display = 'none';
+
+}
+
 };
 
 const saveProduct = () => {
