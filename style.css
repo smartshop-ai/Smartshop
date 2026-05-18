@@ -1,46 +1,50 @@
-:root {
-    --glass: rgba(255,255,255,0.05);
-    --border: rgba(255,255,255,0.1);
+/* style.css */
+
+body{
+font-family:sans-serif;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
+.glass-card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,0.1);
+border-radius:20px;
 }
 
-.glass-card {
-    background: var(--glass);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: 1.5rem;
-    padding: 1rem;
+.nav-btn{
+padding:15px;
+border-radius:15px;
+background:none;
+border:none;
+color:#94a3b8;
+font-size:20px;
 }
 
-.nav-btn {
-    padding: 1rem;
-    border-radius: 0.75rem;
-    color: #94a3b8;
-    background: transparent;
-    border: none;
-    cursor: pointer;
+.nav-btn.active{
+background:rgba(99,102,241,0.3);
+color:#818cf8;
 }
 
-.nav-btn.active {
-    background: rgba(99,102,241,0.2);
-    color: #818cf8;
+.input-field{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border-radius:12px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
+color:white;
 }
 
-.input-field {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(30,41,59,0.5);
-    color: white;
+.hidden{
+display:none;
 }
 
-.hidden {
-    display: none;
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.7);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
 }
