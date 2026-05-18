@@ -7,116 +7,249 @@
 
 <title>SmartShop AI</title>
 
-<link rel="manifest" href="manifest.json">
-
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/html5-qrcode"></script>
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:sans-serif;
+margin:0;
+padding:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+margin-bottom:10px;
+border-radius:10px;
+border:none;
+background:#1e293b;
+color:white;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:10px;
+background:#6366f1;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.product{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.total{
+font-size:24px;
+font-weight:bold;
+margin-top:20px;
+}
+</style>
 </head>
 
-<body class="bg-slate-900 text-white min-h-screen">
+<body>
 
-<nav class="fixed bottom-0 w-full bg-slate-800 p-4 flex justify-around z-50">
+<h1 class="text-3xl font-bold mb-6">
+SmartShop AI 🚀
+</h1>
 
-<button onclick="showSection('dashboard', this)" class="nav-btn active">
-<i class="fas fa-chart-line"></i>
-</button>
+<div class="card">
 
-<button onclick="showSection('billing', this)" class="nav-btn">
-<i class="fas fa-file-invoice"></i>
-</button>
+<h2 class="text-xl font-bold mb-4">
+Add Product
+</h2>
 
-<button onclick="showSection('inventory', this)" class="nav-btn">
-<i class="fas fa-box"></i>
-</button>
+<input type="text" id="name" placeholder="Product Name">
 
-</nav>
+<input type="number" id="price" placeholder="Price">
 
-<main class="p-6 pb-24">
-
-<section id="dashboard" class="content-section">
-<h1 class="text-3xl font-bold mb-4">Business Overview</h1>
-
-<div class="glass-card p-4">
-<p>SmartShop AI Dashboard Ready 🚀</p>
-</div>
-</section>
-
-<section id="billing" class="content-section hidden">
-
-<h2 class="text-2xl font-bold mb-4">Billing</h2>
-
-<div id="reader" class="hidden"></div>
-
-<div class="glass-card p-4">
-
-<input type="text" id="cust-name" placeholder="Customer Name" class="input-field">
-
-<button onclick="toggleScanner()" class="bg-blue-600 p-3 rounded-lg w-full mb-3">
-Scan Barcode
-</button>
-
-<div id="cart-items"></div>
-
-<h3 class="text-xl font-bold mt-4">
-Total:
-<span id="bill-total">₹0</span>
-</h3>
-
-<button onclick="finalizeBill()" class="bg-emerald-500 text-black font-bold p-3 rounded-lg w-full mt-4">
-Generate Bill
-</button>
-
-</div>
-
-</section>
-
-<section id="inventory" class="content-section hidden">
-
-<div class="flex justify-between items-center mb-4">
-<h2 class="text-2xl font-bold">Inventory</h2>
-
-<button onclick="toggleModal()" class="bg-indigo-500 p-2 rounded-lg">
-+ Add
-</button>
-</div>
-
-<div id="inventory-list" class="grid gap-4"></div>
-
-</section>
-
-</main>
-
-<div id="product-modal" class="modal hidden">
-
-<div class="glass-card p-4">
-
-<h3 class="text-xl mb-4">Add Product</h3>
-
-<input id="p-name" class="input-field" placeholder="Product Name">
-
-<input id="p-barcode" class="input-field" placeholder="Barcode">
-
-<input id="p-price" type="number" class="input-field" placeholder="Price">
-
-<button onclick="saveProduct()" class="bg-emerald-500 text-black p-3 rounded-lg w-full">
+<button onclick="addProduct()">
 Save Product
 </button>
 
 </div>
 
+<div class="card">
+
+<h2 class="text-xl font-bold mb-4">
+Inventory
+</h2>
+
+<div id="inventory"></div>
+
 </div>
 
-<script src="app.js"></script>
+<div class="card">
+
+<h2 class="text-xl font-bold mb-4">
+Billing
+</h2>
+
+<div id="bill"></div>
+
+<div class="total">
+Total:
+<span id="total">₹0</span>
+</div>
+
+<button onclick="generateBill()" class="mt-4">
+Generate WhatsApp Bill
+</button>
+
+</div>
 
 <script>
-if ('serviceWorker' in navigator) {
-window.addEventListener('load', () => {
-navigator.serviceWorker.register('./sw.js');
-});
+
+let products =
+JSON.parse(localStorage.getItem("products")) || [];
+
+let bill = [];
+
+function saveData(){
+localStorage.setItem(
+"products",
+JSON.stringify(products)
+);
 }
+
+function renderInventory(){
+
+const inventory =
+document.getElementById("inventory");
+
+inventory.innerHTML = "";
+
+products.forEach((p,index)=>{
+
+inventory.innerHTML += `
+
+<div class="product">
+
+<div>
+<b>${p.name}</b><br>
+₹${p.price}
+</div>
+
+<button onclick="addToBill(${index})">
+Add
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function addProduct(){
+
+const name =
+document.getElementById("name").value;
+
+const price =
+document.getElementById("price").value;
+
+if(!name || !price){
+alert("Fill all fields");
+return;
+}
+
+products.push({
+name,
+price:Number(price)
+});
+
+saveData();
+
+renderInventory();
+
+document.getElementById("name").value="";
+document.getElementById("price").value="";
+
+alert("Product Added");
+
+}
+
+function addToBill(index){
+
+bill.push(products[index]);
+
+renderBill();
+
+}
+
+function renderBill(){
+
+const billDiv =
+document.getElementById("bill");
+
+billDiv.innerHTML = "";
+
+let total = 0;
+
+bill.forEach(item=>{
+
+total += item.price;
+
+billDiv.innerHTML += `
+
+<div class="product">
+
+<span>${item.name}</span>
+
+<span>₹${item.price}</span>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("total")
+.innerText = `₹${total}`;
+
+}
+
+function generateBill(){
+
+let text =
+"*SmartShop Bill*%0A%0A";
+
+bill.forEach(item=>{
+
+text +=
+`${item.name} - ₹${item.price}%0A`;
+
+});
+
+text += `%0ATotal: ${
+document.getElementById("total").innerText
+}`;
+
+window.open(
+`https://wa.me/?text=${text}`,
+"_blank"
+);
+
+}
+
+renderInventory();
+
 </script>
 
 </body>
