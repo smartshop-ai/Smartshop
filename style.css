@@ -51,3 +51,6 @@ padding:20px;
 .modal:not(.hidden){
 display:flex;
 }
+#product-modal{
+display:none;
+}
