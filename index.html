@@ -1,81 +1,121 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartShop AI | Next-Gen Billing</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="manifest" href="manifest.json">
+<title>SmartShop AI</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
+<link rel="manifest" href="manifest.json">
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body class="bg-slate-900 text-white min-h-screen font-sans">
+<body class="bg-slate-900 text-white min-h-screen">
 
-<nav class="fixed bottom-0 w-full bg-slate-800/50 backdrop-blur-lg border-t border-white/10 z-50 flex justify-around p-4 md:top-0 md:bottom-auto md:flex-col md:w-20 md:h-full">
+<nav class="fixed bottom-0 w-full bg-slate-800 p-4 flex justify-around z-50">
 
 <button onclick="showSection('dashboard', this)" class="nav-btn active">
-<i class="fas fa-chart-line text-xl"></i>
+<i class="fas fa-chart-line"></i>
 </button>
 
 <button onclick="showSection('billing', this)" class="nav-btn">
-<i class="fas fa-file-invoice-dollar text-xl"></i>
+<i class="fas fa-file-invoice"></i>
 </button>
 
 <button onclick="showSection('inventory', this)" class="nav-btn">
-<i class="fas fa-boxes text-xl"></i>
+<i class="fas fa-box"></i>
 </button>
 
 </nav>
 
-<main class="pb-24 md:pl-24 p-6 max-w-7xl mx-auto">
+<main class="p-6 pb-24">
 
 <section id="dashboard" class="content-section">
-<header class="mb-8">
-<h1 class="text-3xl font-bold">Business Overview</h1>
-<p class="text-slate-400">Welcome back, Admin</p>
-</header>
+<h1 class="text-3xl font-bold mb-4">Business Overview</h1>
+
+<div class="glass-card p-4">
+<p>SmartShop AI Dashboard Ready 🚀</p>
+</div>
 </section>
 
 <section id="billing" class="content-section hidden">
-<h2 class="text-2xl font-bold mb-6">New Billing</h2>
 
-<div id="reader" class="hidden mb-4 overflow-hidden rounded-xl bg-black"></div>
+<h2 class="text-2xl font-bold mb-4">Billing</h2>
 
-<div class="glass-card p-6">
+<div id="reader" class="hidden"></div>
+
+<div class="glass-card p-4">
+
 <input type="text" id="cust-name" placeholder="Customer Name" class="input-field">
+
+<button onclick="toggleScanner()" class="bg-blue-600 p-3 rounded-lg w-full mb-3">
+Scan Barcode
+</button>
 
 <div id="cart-items"></div>
 
-<div class="mt-4 font-bold text-xl">
-Total: <span id="bill-total">₹0.00</span>
+<h3 class="text-xl font-bold mt-4">
+Total:
+<span id="bill-total">₹0</span>
+</h3>
+
+<button onclick="finalizeBill()" class="bg-emerald-500 text-black font-bold p-3 rounded-lg w-full mt-4">
+Generate Bill
+</button>
+
 </div>
 
-<button onclick="finalizeBill()" class="w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl mt-4">
-GENERATE BILL
-</button>
-</div>
 </section>
 
 <section id="inventory" class="content-section hidden">
-<h2 class="text-2xl font-bold mb-6">Inventory</h2>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="inventory-list"></div>
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-2xl font-bold">Inventory</h2>
+
+<button onclick="toggleModal()" class="bg-indigo-500 p-2 rounded-lg">
++ Add
+</button>
+</div>
+
+<div id="inventory-list" class="grid gap-4"></div>
+
 </section>
 
 </main>
+
+<div id="product-modal" class="modal hidden">
+
+<div class="glass-card p-4">
+
+<h3 class="text-xl mb-4">Add Product</h3>
+
+<input id="p-name" class="input-field" placeholder="Product Name">
+
+<input id="p-barcode" class="input-field" placeholder="Barcode">
+
+<input id="p-price" type="number" class="input-field" placeholder="Price">
+
+<button onclick="saveProduct()" class="bg-emerald-500 text-black p-3 rounded-lg w-full">
+Save Product
+</button>
+
+</div>
+
+</div>
 
 <script src="app.js"></script>
 
 <script>
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js');
-    });
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('./sw.js');
+});
 }
 </script>
 
